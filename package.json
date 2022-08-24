@@ -1,0 +1,53 @@
+{
+    "$schema": "https://fbflipper.com/schemas/plugin-package/v2.json",
+    "name": "flipper-plugin-stream-chat-react-native",
+    "id": "StreamChatReactNative",
+    "version": "1.1.1",
+    "pluginType": "client",
+    "main": "dist/bundle.js",
+    "flipperBundlerEntry": "src/index.tsx",
+    "license": "MIT",
+    "keywords": [
+        "flipper-plugin"
+    ],
+    "icon": "apps",
+    "title": "Stream Chat React Native",
+    "scripts": {
+        "lint": "flipper-pkg lint",
+        "prepack": "flipper-pkg lint && flipper-pkg bundle",
+        "build": "flipper-pkg bundle",
+        "watch": "flipper-pkg bundle --watch",
+        "test": "jest --no-watchman"
+    },
+    "peerDependencies": {
+        "@emotion/styled": "latest",
+        "antd": "latest",
+        "flipper-plugin": "^0.156.0",
+        "react": "latest",
+        "react-dom": "latest"
+    },
+    "devDependencies": {
+        "@babel/preset-react": "latest",
+        "@babel/preset-typescript": "latest",
+        "@emotion/styled": "latest",
+        "@testing-library/react": "latest",
+        "@types/jest": "latest",
+        "@types/react": "17.0.2",
+        "@types/react-dom": "17.0.2",
+        "antd": "latest",
+        "flipper-pkg": "latest",
+        "flipper-plugin": "latest",
+        "jest": "latest",
+        "jest-environment-jsdom": "latest",
+        "jest-mock-console": "latest",
+        "react": "17.0.2",
+        "react-dom": "17.0.2",
+        "typescript": "latest"
+    },
+    "jest": {
+        "testEnvironment": "jsdom",
+        "setupFiles": [
+            "<rootDir>/jest-setup.ts"
+        ]
+    }
+}
