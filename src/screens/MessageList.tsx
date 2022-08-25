@@ -38,6 +38,7 @@ const MessageListScreen = (props: MessageListScreenType) => {
                                 onClick={() => {
                                     setSelectedMessageId(item.id);
                                 }}
+                                style={{ marginLeft: 20, marginRight: 20 }}
                             >
                                 <Comment
                                     author={item.userName}

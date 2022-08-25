@@ -8,7 +8,7 @@ import {
     DetailSidebar,
     DataInspector,
 } from "flipper-plugin";
-import { Typography } from "antd";
+import { Empty, Typography } from "antd";
 import Header from "./components/Header";
 import ChannelListScreen from "./screens/ChannelList";
 import MessageListScreen from "./screens/MessageList";
@@ -18,6 +18,7 @@ import {
     MessageType,
     Methods,
     ChannelType,
+    ClientType,
     RowType,
     ThreadType,
 } from "./types";
@@ -26,26 +27,35 @@ import {
 // API: https://fbflipper.com/docs/extending/flipper-plugin#pluginclient
 export function plugin(client: PluginClient<Events, Methods>) {
     const channels = createState<ChannelType[]>([], { persist: "channels" });
+    const authenticatedClient = createState<ClientType | null>(null, {
+        persist: "client",
+    });
     const messages = createState<MessageType[]>([], { persist: "messages" });
     const threadList = createState<ThreadType[]>([], { persist: "threadList" });
-    const selectedChannelId = createState<string | null>(null, {
-        persist: "selectedChannelId",
+    const selectedChannel = createState<ChannelType | null>(null, {
+        persist: "selectedChannel",
     });
-    const selectedMessageId = createState<string | null>(null, {
-        persist: "selectedMessageId",
+    const selectedMessage = createState<MessageType | null>(null, {
+        persist: "selectedMessage",
     });
-    const selectedThreadMessageId = createState<string | null>(null, {
-        persist: "selectedThreadMessageId",
+    const selectedThreadMessage = createState<MessageType | null>(null, {
+        persist: "selectedThreadMessage",
     });
     const eventType = createState<string | null>(null, {
         persist: "eventType",
     });
-
-    const darkMode = createState<boolean>(false, { persist: "darkMode" });
+    const viewClient = createState<boolean>(false, {
+        persist: "viewClient",
+    });
 
     client.onMessage("Channels", (newData) => {
         channels.set(newData);
         eventType.set("Channels");
+    });
+
+    client.onMessage("Client", (newData) => {
+        authenticatedClient.set(newData);
+        eventType.set("Client");
     });
 
     client.onMessage("Messages", (newData) => {
@@ -59,37 +69,55 @@ export function plugin(client: PluginClient<Events, Methods>) {
     });
 
     const setSelectedChannelId = (id: string) => {
-        selectedChannelId.set(id);
+        const data = [...channels.get()];
+        const channelWithId = data.find((channel) => channel.data.id === id);
+        if (channelWithId) selectedChannel.set(channelWithId);
+        selectedMessage.set(null);
+        selectedThreadMessage.set(null);
+        viewClient.set(false);
     };
 
     const setSelectedMessageId = (id: string) => {
-        selectedMessageId.set(id);
+        const data = [...messages.get()];
+        const messageWithId = data.find((message) => message.id === id);
+        if (messageWithId) selectedMessage.set(messageWithId);
+        selectedChannel.set(null);
+        selectedThreadMessage.set(null);
+        viewClient.set(false);
     };
 
     const setSelectedThreadMessageId = (id: string) => {
-        selectedThreadMessageId.set(id);
+        const data = [...threadList.get()];
+        const threadMessageWithId = data.find(
+            (threadMessage) => threadMessage.id === id
+        );
+        if (threadMessageWithId) selectedThreadMessage.set(threadMessageWithId);
+        selectedChannel.set(null);
+        selectedMessage.set(null);
+        viewClient.set(false);
     };
 
-    const setDarkMode = (checked: boolean) => {
-        darkMode.set(checked);
-        client.send("darkMode", {
-            darkMode,
-        });
+    const setViewClient = (checked: boolean) => {
+        viewClient.set(checked);
+        selectedThreadMessage.set(null);
+        selectedChannel.set(null);
+        selectedMessage.set(null);
     };
 
     return {
+        authenticatedClient,
         channels,
-        darkMode,
         eventType,
         messages,
         threadList,
-        selectedChannelId,
-        selectedMessageId,
-        selectedThreadMessageId,
+        viewClient,
+        selectedChannel,
+        selectedMessage,
+        selectedThreadMessage,
         setSelectedChannelId,
         setSelectedMessageId,
         setSelectedThreadMessageId,
-        setDarkMode,
+        setViewClient,
     };
 }
 
@@ -98,28 +126,36 @@ export function plugin(client: PluginClient<Events, Methods>) {
 export function Component() {
     const instance = usePlugin(plugin);
     const channels = useValue(instance.channels);
+    const authenticatedClient = useValue(instance.authenticatedClient);
+    const viewClient = useValue(instance.viewClient);
     const messages = useValue(instance.messages);
     const threadMessages = useValue(instance.threadList);
-    const selectedChannelId = useValue(instance.selectedChannelId);
-    const selectedMessageId = useValue(instance.selectedMessageId);
-    const selectedThreadMessageId = useValue(instance.selectedThreadMessageId);
+    const selectedChannel = useValue(instance.selectedChannel);
+    const selectedMessage = useValue(instance.selectedMessage);
+    const selectedThreadMessage = useValue(instance.selectedThreadMessage);
     const eventType = useValue(instance.eventType);
-    const darkMode = useValue(instance.darkMode);
 
     return (
         <Layout.ScrollContainer>
             <Header
-                darkMode={darkMode}
-                setDarkMode={(data: boolean) => {
-                    instance.setDarkMode(data);
+                viewClient={viewClient}
+                setViewClient={(checked: boolean) => {
+                    instance.setViewClient(checked);
                 }}
             />
+            {!eventType && (
+                <Empty
+                    style={{ marginTop: 20 }}
+                    description="If you don't see any data, please refresh the app."
+                />
+            )}
+
             {eventType === "Channels" && (
                 <ChannelListScreen
                     channels={channels}
-                    setSelectedChannelId={(id) => {
-                        instance.setSelectedChannelId(id);
-                    }}
+                    setSelectedChannelId={(id) =>
+                        instance.setSelectedChannelId(id)
+                    }
                 />
             )}
             {eventType === "Messages" && (
@@ -139,34 +175,30 @@ export function Component() {
                 />
             )}
             <DetailSidebar>
-                {selectedChannelId &&
+                {viewClient &&
+                    authenticatedClient &&
                     renderSidebar(
-                        channels.find(
-                            (channel) => channel.data.id === selectedChannelId
-                        )
+                        authenticatedClient,
+                        authenticatedClient.name
                     )}
-                {selectedMessageId &&
+                {selectedChannel &&
+                    renderSidebar(selectedChannel, selectedChannel.data.id)}
+                {selectedMessage &&
+                    renderSidebar(selectedMessage, selectedMessage.id)}
+                {selectedThreadMessage &&
                     renderSidebar(
-                        messages.find(
-                            (message) => message.id === selectedMessageId
-                        )
-                    )}
-                {selectedThreadMessageId &&
-                    renderSidebar(
-                        threadMessages.find(
-                            (threadMessage) =>
-                                threadMessage.id === selectedThreadMessageId
-                        )
+                        selectedThreadMessage,
+                        selectedThreadMessage.id
                     )}
             </DetailSidebar>
         </Layout.ScrollContainer>
     );
 }
 
-function renderSidebar(row: RowType) {
+function renderSidebar(row: RowType, heading: string) {
     return (
         <Layout.Container gap pad>
-            <Typography.Title level={4}>{row.name}</Typography.Title>
+            <Typography.Title level={4}>{heading}</Typography.Title>
             <DataInspector data={row} />
         </Layout.Container>
     );
