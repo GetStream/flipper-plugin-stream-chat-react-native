@@ -38,6 +38,7 @@ const ThreadMessageListScreen = (props: ThreadListScreenType) => {
                                 onClick={() => {
                                     setSelectedThreadMessageId(item.id);
                                 }}
+                                style={{ marginLeft: 20, marginRight: 20 }}
                             >
                                 <Comment
                                     author={item.userName}

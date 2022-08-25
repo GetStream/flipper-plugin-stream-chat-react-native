@@ -16,6 +16,10 @@ export type ChannelType = {
     >;
 };
 
+export type ClientType = {
+    name: string;
+};
+
 export type MessageType = {
     created_at: string;
     html: string;
@@ -28,6 +32,7 @@ export type ThreadType = MessageType;
 
 export type Events = {
     Channels: ChannelType[];
+    Client: ClientType;
     Messages: MessageType[];
     ThreadList: ThreadType[];
 };

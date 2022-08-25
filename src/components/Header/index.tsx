@@ -1,26 +1,27 @@
 import React from "react";
 import { PageHeader, Row, Col, Typography, Switch } from "antd";
+import { ClientType } from "../../types";
 
 export type HeaderType = {
-    darkMode: boolean;
-    setDarkMode: (data: boolean) => void;
+    viewClient: boolean;
+    setViewClient: (checked: boolean) => void;
 };
 
 const Header = (props: HeaderType) => {
-    const { darkMode, setDarkMode } = props;
+    const { viewClient, setViewClient } = props;
     return (
         <PageHeader style={{ backgroundColor: "darkgray" }}>
             <Row>
                 <Col>
                     <Typography style={{ color: "white" }}>
-                        Dark Mode
+                        View Authenticated Client
                     </Typography>
                 </Col>
                 <Col style={{ marginLeft: 20 }}>
                     <Switch
-                        checked={darkMode}
+                        checked={viewClient}
                         onChange={(checked) => {
-                            setDarkMode(checked);
+                            setViewClient(checked);
                         }}
                     />
                 </Col>
