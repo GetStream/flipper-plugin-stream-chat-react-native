@@ -2,13 +2,21 @@
     "$schema": "https://fbflipper.com/schemas/plugin-package/v2.json",
     "name": "flipper-plugin-stream-chat-react-native",
     "id": "StreamChatReactNative",
-    "version": "1.1.1",
+    "version": "1.2.0",
     "pluginType": "client",
     "main": "dist/bundle.js",
     "flipperBundlerEntry": "src/index.tsx",
     "license": "MIT",
+    "homepage": "https://github.com/GetStream/flipper-plugin-stream-chat-react-native",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/GetStream/flipper-plugin-stream-chat-react-native"
+    },
     "keywords": [
-        "flipper-plugin"
+        "flipper-plugin",
+        "stream-chat",
+        "react-native",
+        "stream-chat-react-native"
     ],
     "icon": "apps",
     "title": "Stream Chat React Native",
