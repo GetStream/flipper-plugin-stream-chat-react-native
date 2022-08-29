@@ -36,12 +36,13 @@ const ChannelListScreen = (props: ChannelListScreenType) => {
                             onClick={() => {
                                 setSelectedChannelId(item.id);
                             }}
+                            style={{ marginLeft: 20, marginRight: 20 }}
                         >
                             <List.Item.Meta
                                 avatar={
                                     <Avatar
                                         src={item.image}
-                                        style={{ margin: 10 }}
+                                        style={{ marginTop: 10 }}
                                     />
                                 }
                                 title={item.title}

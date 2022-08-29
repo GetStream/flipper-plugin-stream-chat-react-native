@@ -1,10 +1,14 @@
-### Stream Chat React Native's Flipper plugin 🚀
+### Stream Chat React Native's Flipper Plugin 🚀
+
+Stream chat React Native Flipper Plugin is created so that users can debug the [Stream Chat React Native](https://github.com/GetStream/stream-chat-react-native) using Flipper with ease.
+
 [![NPM](https://img.shields.io/npm/v/flipper-plugin-stream-chat-react-native.svg)](https://www.npmjs.com/package/flipper-plugin-stream-chat-react-native)
 
-Stream chat React Native Flipper Plugin is created so that users can debug the [Stream Chat React Native](https://github.com/GetStream/stream-chat-react-native) with ease.
+<img src="./assets/flipper_stream_chat_react_native_banner.png" />
 
 ## 📝 Features
 
+- Viewing the authenticated client in the Chat.
 - Viewing the Channels, Message and Thread list data on the go.
 - Copying and visualizing all the data.
 
@@ -16,7 +20,7 @@ To install the plugin you need to follow these steps:
 - Search for **stream-chat-react-native** and you will find this plugin.
 - Click on Install to install it.
 
-To use the plugin with the application using Stream Chat React Native SDK you need to follow [this]().
+To use the plugin with the application using Stream Chat React Native SDK you need to follow [this guide](https://getstream.io/chat/docs/sdk/reactnative/guides/debug-mode-using-flipper-plugin/).
 
 ## 👏 Contributing
 
