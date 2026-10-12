@@ -1,3 +1,5 @@
+> **This repository is archived and no longer maintained.** For a current alternative, see [React Native DevTools](https://reactnative.dev/docs/react-native-devtools).
+
 ### Stream Chat React Native's Flipper Plugin 🚀
 
 Stream chat React Native Flipper Plugin is created so that users can debug the [Stream Chat React Native](https://github.com/GetStream/stream-chat-react-native) using Flipper with ease.
